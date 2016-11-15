@@ -2,7 +2,13 @@
 var items_table = document.getElementById("items");
 
 //array of items in the warehouse to be displayed
-var items = []
+var items = [];
+
+//total number of items in the warehouse
+var item_count = 0;
+
+//maximum amount of items
+var max_amount = 30;
 
 /**
  * @Show the add item menu, hiding the add button.
@@ -11,6 +17,8 @@ function order(){
     //Show content of add menu item and hide the order button
     document.getElementById("add_form").style.display = "block";
     document.getElementById("order_button").style.display = "none";
+    //check amount
+    checkAmount();
     
 }
 
@@ -26,6 +34,7 @@ function addToWarehouse(item_name, item_quantity) {
         if(items[i].item_name == item_name){
             //item already present, update quantity
             items[i].quantity += parseInt(item_quantity);
+            item_count += parseInt(item_quantity);
             //update table
             items_table.rows[1].cells[i].innerHTML = items[i].quantity;
             //stop looping
@@ -40,6 +49,7 @@ function addToWarehouse(item_name, item_quantity) {
         new_item = {item_name:item_name, quantity:parseInt(item_quantity)}
         //add item to warehouse
         items.push(new_item);
+        item_count += parseInt(item_quantity);
         //update table
         var cell_name = items_table.rows[0].insertCell(-1);
         cell_name.innerHTML = item_name;
@@ -50,11 +60,14 @@ function addToWarehouse(item_name, item_quantity) {
     //Hide add menu item and show the order button
     document.getElementById("add_form").style.display = "none";
     document.getElementById("order_button").style.display = "block";
-
+    
+    //check amount NB after insertion
+    checkAmount();
+    
 }
 
 /**
- * @brief Process & validate input from form, and clear the form for future usage.
+ * @Process & validate input from form, and clear the form for future usage.
  */
 function btnAdd(){
     //get form element from page
@@ -76,9 +89,35 @@ function btnAdd(){
 }
 
 /**
- * @brief Load some defaults values into the table.
+ * @Check if the maximum amount inserted is valid and update max_amount.
+ */
+function setAmount(){
+    //get value from form
+    var value = document.getElementById("amount_form").elements[0].value;
+    //check if value is valid
+    if(value == null || value < 0){
+        alert("Value for max amount not valid!");
+    }else{
+        max_amount = value;
+        //check amount NB after change
+        checkAmount();
+    }
+}
+
+/**
+ * @Check if the number of items is greater that the maximum and display an alert.
+ */
+function checkAmount(){
+    if(item_count > max_amount){
+        alert("The total number of items is greater than the maximum!");
+    }
+}
+
+/**
+ * @Load some defaults values into the table and maximum amount field.
  */
 function loadDefaults(){
     addToWarehouse("Item1", 3);
     addToWarehouse("Item2", 6);
+    document.getElementById("amount_form").elements[0].value = max_amount;
 }
