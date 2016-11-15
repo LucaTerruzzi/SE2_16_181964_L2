@@ -12,6 +12,11 @@
     <tr>
     </tr>    
     </table>
+    <form id="amount_form">
+        Maximum amount <br>
+        <input type="number" name="max_amount" min="0">
+        <input type="submit" value="Set" onclick="setAmount();return false;">
+    </form>
     <button onclick="order()" id="order_button">Order</button>
     <form style="display:none" id="add_form">
         Item name:<br>
